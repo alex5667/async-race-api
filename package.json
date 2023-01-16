@@ -1,14 +1,11 @@
 {
-  "name": "async-race-api",
+  "name": "client",
   "version": "1.0.0",
-  "description": "Fun with promises",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "mikhama",
-  "license": "MIT",
-  "devDependencies": {
-    "json-server": "^0.16.3"
-  }
+  "author": "",
+  "license": "ISC"
 }
