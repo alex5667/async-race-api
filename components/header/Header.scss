@@ -1,0 +1,22 @@
+@use "sass:math";
+@import "../../scss/base/mixins.scss";
+
+$mainColor: #221f1f;
+
+
+.header{
+  background-color: $mainColor;
+  height: rem(72);
+}
+.header {
+
+  // .header__container
+
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    height: 100%;
+  }
+}
