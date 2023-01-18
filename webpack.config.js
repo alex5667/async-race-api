@@ -19,7 +19,7 @@ module.exports = ({ development }) => ({
   mode: development ? 'development' : 'production',
   devtool: development ? 'inline-source-map' : false,
   entry: {
-    main: './src/index.ts',
+    main: './index.ts',
   },
   output: {
     filename: '[name].[contenthash].js',
@@ -60,12 +60,11 @@ module.exports = ({ development }) => ({
     ...esLintPlugin(development),
     new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' }),
     new HtmlWebpackPlugin({
-      title: 'Match Match Game',
-      template: path.resolve(__dirname, './src/index.html'),
+      template: path.resolve(__dirname, './index.html'),
     }),
     new CopyPlugin({
       patterns: [
-        { from: 'src/assets', to: 'assets' }
+        { from: './assets/', to: 'assets' }
       ],
     }),
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
