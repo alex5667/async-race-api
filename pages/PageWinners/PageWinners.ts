@@ -1,14 +1,18 @@
 import render from '../../utils/render';
 
 export class PageWinners {
+  parent: HTMLElement;
+
   constructor(parent: HTMLElement) {
-    const winnersEl = render<HTMLDivElement>(parent, 'section', ['garage']);
-    const winnersContainer = render<HTMLDivElement>(
-      winnersEl,
+    this.parent = parent;
+  }
+
+  init(): void {
+    render<HTMLDivElement>(
+      this.parent,
       'div',
       ['winners__container'],
       'Winners',
     );
   }
 }
-

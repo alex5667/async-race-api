@@ -1,12 +1,19 @@
 import { Header } from './components/header/Header';
-import { PageGarage } from './pages/PageGarage/PageGarage';
-import { PageWinners } from './pages/PageWinners/PageWinners';
+
+import render from './utils/render';
+import { Router } from './utils/router';
 
 export class App {
+  router: Router;
+  mainSection: HTMLElement;
   constructor(private root: HTMLElement) {
     const header = new Header(this.root);
-    const garage = new PageGarage(this.root);
-    const wiiners = new PageWinners(this.root);
+    this.mainSection = render<HTMLDivElement>(this.root, 'section', ['main']);
 
+    this.router = new Router(this.mainSection);
+  }
+
+  init(): void {
+    this.router.init();
   }
 }

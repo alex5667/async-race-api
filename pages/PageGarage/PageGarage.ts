@@ -1,13 +1,12 @@
 import render from '../../utils/render';
 
 export class PageGarage {
+  parent: HTMLElement;
   constructor(parent: HTMLElement) {
-    const garageEl = render<HTMLDivElement>(parent, 'section', ['garage']);
-    const garageContainer = render<HTMLDivElement>(
-      garageEl,
-      'div',
-      ['garage__container'],
-      'Garage',
-    );
+    this.parent = parent;
+  }
+
+  init(): void {
+    render<HTMLDivElement>(this.parent, 'div', ['garage__container'], 'Garage');
   }
 }
