@@ -6,7 +6,7 @@ $mainColor: #221f1f;
 
 .header{
   background-color: $mainColor;
-  height: rem(72);
+  height: rem(92);
 }
 .header {
 
@@ -20,3 +20,9 @@ $mainColor: #221f1f;
     height: 100%;
   }
 }
+
+.link-nav{
+  background-color: red;
+  padding: rem(10);
+}
+
