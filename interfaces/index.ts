@@ -1,4 +1,11 @@
 export interface IRoute {
-  name: string;
+  path: string;
   page: () => void;
 }
+
+export interface ICar {
+  id: number;
+  name: string;
+  color: string;
+}
+

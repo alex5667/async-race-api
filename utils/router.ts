@@ -15,24 +15,23 @@ export class Router {
     this.rootEl = root;
     this.pageGarage = new PageGarage(this.rootEl);
     this.pageWinners = new PageWinners(this.rootEl);
-    this.pageGarage.init();
 
     this.routes = [
       {
-        name: '/',
+        path: '/',
         page: () => {
-          this.pageGarage.init();
+          this.pageGarage = new PageGarage(this.rootEl);
         },
       },
       {
-        name: '/winners',
+        path: '/winners',
         page: () => {
-          this.pageWinners.init();
+          this.pageWinners = new PageWinners(this.rootEl);
         },
       },
     ];
     this.defaultRoute = {
-      name: 'Default router',
+      path: 'Default router',
       page: () => {
         this.rootEl.innerHTML = 'Default Page';
       },
@@ -42,7 +41,7 @@ export class Router {
   update(): void {
     this.rootEl.innerHTML = '';
     const hash = window.location.hash.slice(1);
-    const currentRoute = this.routes.find((page) => page.name === hash);
+    const currentRoute = this.routes.find((page) => page.path === hash);
     (currentRoute || this.defaultRoute).page();
   }
 

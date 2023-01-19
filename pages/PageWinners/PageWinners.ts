@@ -5,9 +5,6 @@ export class PageWinners {
 
   constructor(parent: HTMLElement) {
     this.parent = parent;
-  }
-
-  init(): void {
     render<HTMLDivElement>(
       this.parent,
       'div',
@@ -15,4 +12,6 @@ export class PageWinners {
       'Winners',
     );
   }
+
+
 }
