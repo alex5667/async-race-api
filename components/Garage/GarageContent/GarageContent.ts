@@ -10,7 +10,6 @@ export class GarageContent {
 
   constructor(parent: HTMLElement) {
     this.cars = [];
-
     this.content = render<HTMLDivElement>(parent, 'div', ['garage__content']);
   }
 

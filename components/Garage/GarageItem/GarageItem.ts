@@ -8,6 +8,8 @@ export class GarageItem {
 
   constructor(parent: HTMLElement, car: ICar) {
     this.car = car;
-    render<HTMLDivElement>(parent, 'div', ['garage-item'], 'garage-item');
+    const itemContainer = render<HTMLDivElement>(parent, 'div', ['garage__item']);
+    const carTop = render<HTMLDivElement>(itemContainer, 'div', ['item__top']);
+
   }
 }
