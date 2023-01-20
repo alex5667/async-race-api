@@ -79,8 +79,10 @@ export class GarageItem {
   }
 
   async startCarEngine(carId: number): Promise<void> {
+    console.log(carId);
+
+
     const data = await startEngineCarApi(carId);
-    console.log(data);
 
     if (data.status === 200) {
       this.updateButtons(true);

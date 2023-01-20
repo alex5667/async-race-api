@@ -23,17 +23,17 @@ export const getAllCars = async (
 export const startEngineCarApi = async (
   carId: number,
 ): Promise<{ status: number; result: IEngine }> => {
-  const response = await fetch(`${BASE_URL}/engine?id=${carId}&status=started`);
-  const data: IEngine = await response.json();
+    const data = await fetch(`${BASE_URL}/engine?id=${carId}&status=started`);
+    const res: IEngine = await data.json();
 
-  return {
-    status: response.status,
-    result: data,
-  };
+    return {
+      status: data.status,
+      result: res,
+    };
+
 };
 
 export const switchToDriveModeApi = async (carId: number): Promise<number> => {
   const response = await fetch(`${BASE_URL}/engine?id=${carId}&status=drive`);
-
   return response.status;
 };

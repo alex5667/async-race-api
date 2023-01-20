@@ -29,8 +29,7 @@ export class PageGarage {
     if (data) {
       const carsArr: Array<ICar> = data.cars;
       const carLength: string = data.count;
-      console.log(carsArr);
-      console.log(carLength);
+
 
       this.garageContent.addItems(carsArr, carLength);
     }
