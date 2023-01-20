@@ -18,7 +18,6 @@ export class GarageContent {
 
     this.cars = cars.map((car) => {
       const item = new GarageItem(this.content, car);
-
       return item;
     });
   }

@@ -1,16 +1,24 @@
 import render from '../../../utils/render';
-import { ICar } from '../../../interfaces';
+import { ICar,IEngine } from '../../../interfaces';
 import { Button } from '../../Button/Button';
 import { CarImage } from '../../CarImage/CarImage';
+import { startEngineCarApi, switchToDriveModeApi } from '../../../utils/api';
 
 import './GarageItem.scss';
+
+const carImageWidth = 100;
+
 
 export class GarageItem {
   public car: ICar;
   private itemContainer: HTMLDivElement;
-  private startEngineCar: Button;
-  private stopEngineCar: Button;
+  private startEngineButton: Button;
+  private stopEngineButton: Button;
   private imageCar: HTMLDivElement;
+  private carAnimation: Animation | undefined;
+  public speed = 0;
+
+
   removeCar: (carId: number) => void = () => {};
   updateCar: (carId: number) => void = () => {};
   startEngine: (carId: number) => void = () => {};
@@ -46,10 +54,18 @@ export class GarageItem {
       'bottom__buttons',
     ]);
 
-    this.startEngineCar = new Button(bottomButtons, ['btn-bottom'], 'A');
-    this.startEngineCar.onClick = () => {};
-    this.stopEngineCar = new Button(bottomButtons, ['btn-bottom'], 'B', true);
-    this.stopEngineCar.onClick = () => {};
+    this.startEngineButton = new Button(bottomButtons, ['btn-bottom'], 'A');
+    this.startEngineButton.onClick = () => {
+      if (car.id) this.startCarEngine(car.id);
+    };
+
+    this.stopEngineButton = new Button(
+      bottomButtons,
+      ['btn-bottom'],
+      'B',
+      true,
+    );
+    this.stopEngineButton.onClick = () => {};
 
     this.imageCar = render<HTMLDivElement>(containerBottom, 'div', [
       'image-car',
@@ -61,4 +77,56 @@ export class GarageItem {
     ]);
     finishFlag.setAttribute('src', '../../../assets/flag-svgrepo-com.svg');
   }
+
+  async startCarEngine(carId: number): Promise<void> {
+    const data = await startEngineCarApi(carId);
+    console.log(data);
+
+    if (data.status === 200) {
+      this.updateButtons(true);
+
+      const { result } = data;
+      const time = result.distance / result.velocity;
+
+      this.animationCar(time);
+      await this.switchToDriveMode(result);
+    }
+  }
+
+  updateButtons(type = false): void {
+    this.startEngineButton.setDisabled(type);
+    this.stopEngineButton.setDisabled(!type);
+  }
+
+  private animationCar(time: number): void {
+    this.carAnimation = this.imageCar.animate(
+      [{ left: '100px' }, { left: `calc(100% - ${carImageWidth}px)` }],
+      {
+        duration: time,
+        easing: 'ease-in-out',
+      },
+    );
+    this.carAnimation.play();
+    this.carAnimation.onfinish = () => {
+      this.imageCar.style.left = `calc(100% - ${carImageWidth}px)`;
+    };
+  }
+
+  private async switchToDriveMode(car: IEngine): Promise<void> {
+    const driveMode = await switchToDriveModeApi(this.car.id);
+    return new Promise((resolve) => {
+      if (driveMode === 500) {
+        this.carAnimation?.pause();
+      }
+
+      if (driveMode === 200) {
+        this.speed = Math.floor(car.distance / car.velocity);
+        resolve();
+      }
+    });
+  }
+
+
+
+
 }
