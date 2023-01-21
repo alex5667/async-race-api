@@ -1,4 +1,4 @@
-import { Header } from './components/header/Header';
+import { Header } from './components/HeaderComponent/Header';
 
 import render from './utils/render';
 import { Router } from './utils/router';
