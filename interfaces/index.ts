@@ -14,3 +14,7 @@ export interface IEngine {
   distance: number;
 }
 
+export interface ICreateCar {
+  name: string;
+  color: string;
+}

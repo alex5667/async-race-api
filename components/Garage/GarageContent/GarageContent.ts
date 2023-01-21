@@ -8,7 +8,7 @@ import './GarageContent.scss';
 export class GarageContent {
   private content: HTMLDivElement;
   private container: HTMLDivElement;
-  private paginationPage: PaginationPage;
+  paginationPage: PaginationPage;
 
   cars: Array<GarageItem>;
   title: HTMLDivElement;
@@ -39,7 +39,6 @@ export class GarageContent {
     this.cars = [];
 
     this.updateTitle(carsLength);
-    this.paginationPage.updateView = (page) => this.updateView(page);
 
     this.cars = cars.map((car) => {
       const item = new GarageItem(this.content, car);
@@ -52,4 +51,6 @@ export class GarageContent {
   private updateTitle(carsLength: string) {
     this.title.innerHTML = `Garage - ${carsLength} cars`;
   }
+
+
 }
