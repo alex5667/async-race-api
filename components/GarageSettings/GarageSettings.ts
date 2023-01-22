@@ -6,9 +6,7 @@ import { SettingsButtons } from './SettingsButtons';
 export class GarageSettings {
   createCar: (state: ICreateCar) => void = () => {};
   updateCar: (car: IUpdateCar) => void = () => {};
-  startRace: () => void = () => {};
-  resetCars: () => void = () => {};
-  generateCars: () => void = () => {};
+
   updateInputs: SettingsInputs;
   settingsButtons: SettingsButtons;
 
@@ -28,13 +26,15 @@ export class GarageSettings {
     };
 
     this.settingsButtons = new SettingsButtons(settingsContainer);
-    this.settingsButtons.startRace = () => this.startRace();
-    this.settingsButtons.resetCars = () => this.resetCars();
-    this.settingsButtons.generateCars = () => this.generateCars();
+    // this.settingsButtons.startRace = () => this.startRace();
+    // this.settingsButtons.resetCars = () => this.resetCars();
+    // this.settingsButtons.generateCars = () => this.generateCars();
   }
 
   updateState(car: ICar): void {
     this.updateInputs.state = car;
     this.updateInputs.updateInputs();
   }
+
+
 }

@@ -1,9 +1,10 @@
 import render from '../../utils/render';
 import './Button.scss';
 
+export type EventListener = [string, () => void];
 
-export class Button {
-  onClick: () => void = () => {};
+export class ButtonR {
+  // onClick: () => void = () => {};
   button: HTMLButtonElement;
 
   constructor(
@@ -15,18 +16,22 @@ export class Button {
     this.button = render<HTMLButtonElement>(parent, 'button', ['btn'], label);
 
     this.button.classList.add(...classNames);
-    this.button.addEventListener('click', () => this.onClick());
+
+    // this.button.addEventListener(listener[0], listener[1]);
 
     if (disabled) {
       this.setDisabled(true);
     }
+
   }
 
-  addeventlistener(event: string, cb: () => void): void {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  addeventlistener(event: string, cb: () => {}): void {
     this.button.addEventListener(event, cb);
   }
 
   setDisabled(type = false): void {
+    console.log(this.button)
     this.button.toggleAttribute('disabled', type);
   }
 
