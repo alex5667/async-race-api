@@ -51,6 +51,4 @@ export class GarageContent {
   private updateTitle(carsLength: string) {
     this.title.innerHTML = `Garage - ${carsLength} cars`;
   }
-
-
 }

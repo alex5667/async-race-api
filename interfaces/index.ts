@@ -18,3 +18,9 @@ export interface ICreateCar {
   name: string;
   color: string;
 }
+
+export interface IUpdateCar {
+  id?: number;
+  name: string;
+  color: string;
+}
