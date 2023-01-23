@@ -10,7 +10,6 @@ import {
 
 import './GarageItem.scss';
 
-
 export class GarageItem {
   public car: ICar;
   private itemContainer: HTMLDivElement;

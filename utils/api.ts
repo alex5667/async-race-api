@@ -105,7 +105,6 @@ export const deleteCarApi = async (
   }
 };
 
-
 export const getCarApi = async (carId: number): Promise<ICar | null> => {
   try {
     const response = await fetch(`${BASE_URL}/garage/${carId}`);

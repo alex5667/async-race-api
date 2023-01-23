@@ -55,6 +55,5 @@ export class PaginationPage {
     this.title.innerHTML = `Page #${this.page}`;
     this.updateView(this.page);
     this.updatePrevButton();
-    
   }
 }

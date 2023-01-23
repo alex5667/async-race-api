@@ -12,6 +12,4 @@ export class PageWinners {
       'Winners',
     );
   }
-
-
 }

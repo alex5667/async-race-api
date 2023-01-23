@@ -1,7 +1,6 @@
 import render from '../../utils/render';
 import './Button.scss';
 
-
 export class Button {
   onClick: () => void = () => {};
   button: HTMLButtonElement;

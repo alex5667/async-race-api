@@ -16,7 +16,7 @@ export class Header {
     );
     linkToGarage.setAttribute('href', '#/');
 
-    const logoTitle = render<HTMLParagraphElement>(
+    render<HTMLParagraphElement>(
       headerContainer,
       'p',
       ['header__title'],
