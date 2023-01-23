@@ -24,3 +24,17 @@ export interface IUpdateCar {
   name: string;
   color: string;
 }
+export interface IWinnerData {
+  id: number;
+  name: string;
+  color: string;
+  speed: number;
+  wins: number;
+  time?: number;
+}
+
+export interface IWinner {
+  id: number;
+  time: number;
+  wins: number;
+}

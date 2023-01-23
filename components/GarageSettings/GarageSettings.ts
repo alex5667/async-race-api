@@ -18,6 +18,7 @@ export class GarageSettings {
       'create-inputs',
     ]);
     createInputs.createCar = (state) => this.createCar(state);
+
     this.updateInputs = new SettingsInputs(settingsContainer, 'update', [
       'update-inputs',
     ]);
@@ -26,15 +27,10 @@ export class GarageSettings {
     };
 
     this.settingsButtons = new SettingsButtons(settingsContainer);
-    // this.settingsButtons.startRace = () => this.startRace();
-    // this.settingsButtons.resetCars = () => this.resetCars();
-    // this.settingsButtons.generateCars = () => this.generateCars();
   }
 
   updateState(car: ICar): void {
     this.updateInputs.state = car;
     this.updateInputs.updateInputs();
   }
-
-
 }

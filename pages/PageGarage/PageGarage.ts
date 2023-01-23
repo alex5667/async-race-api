@@ -4,46 +4,53 @@ import {
   createCarApi,
   updateCarApi,
   deleteCarApi,
-  deleteWinnerApi,
-  getCar,
+  getCarApi,
+  getWinnerApi,
+  setWinnerApi,
 } from '../../utils/api';
-import { ICar, ICreateCar, IUpdateCar } from '../../interfaces';
+import {
+  ICar,
+  ICreateCar,
+  IUpdateCar,
+  IWinnerData,
+  IWinner,
+} from '../../interfaces';
 import { GarageContent } from '../../components/Garage/GarageContent/GarageContent';
 import { GarageSettings } from '../../components/GarageSettings/GarageSettings';
 import { cars } from '../../model/Cars';
 import { randomColor } from '../../utils/randomColor';
 import { GarageItem } from '../../components/Garage/GarageItem/GarageItem';
+import { PopupWinner } from '../../components/PopupWinner/PopupWinner';
 
 export class PageGarage {
   parent: HTMLElement;
   page = 1;
   private garageContent: GarageContent;
   private garageSettings: GarageSettings;
-
+  garageContainer: HTMLDivElement;
 
   constructor(parent: HTMLElement) {
     this.parent = parent;
 
-    const garageContainer = render<HTMLDivElement>(this.parent, 'div', [
+    this.garageContainer = render<HTMLDivElement>(this.parent, 'div', [
       'garage__container',
     ]);
     this.getCars(this.page);
 
-    this.garageSettings = new GarageSettings(garageContainer);
-    this.garageSettings.createCar = async (state) => {
-      await this.createCar(state);
-      await this.getCars(this.page);
-    };
-
+    this.garageSettings = new GarageSettings(this.garageContainer);
     this.garageSettings.updateCar = (state) => this.updateCar(state);
-    this.garageContent = new GarageContent(garageContainer);
+    this.garageContent = new GarageContent(this.garageContainer);
     this.garageContent.removeCar = (carId) => this.removeCar(carId);
     this.garageContent.updateCar = (carId) => this.getCar(carId);
     this.garageContent.updateView = (page) => {
       this.page = page;
       this.getCars(page);
     };
-    this.buttonAddEvenListener();
+    this.btnGarageSettingsAddListener();
+    this.garageSettings.createCar = async (state) => {
+      await this.createCar(state);
+      await this.getCars(this.page);
+    };
   }
 
   private async getCars(page: number): Promise<void> {
@@ -92,13 +99,13 @@ export class PageGarage {
   }
 
   private async removeCar(carId: number): Promise<void> {
-    await deleteCarApi(carId);
-    await deleteWinnerApi(carId);
+    await deleteCarApi(carId, 'garage');
+    await deleteCarApi(carId, 'winners');
     await this.getCars(this.page);
   }
 
   private async getCar(carId: number): Promise<void> {
-    const car = await getCar(carId);
+    const car = await getCarApi(carId);
 
     if (car) this.garageSettings.updateState(car);
   }
@@ -118,11 +125,42 @@ export class PageGarage {
 
   async startRace(): Promise<void> {
     this.garageSettingsBtn(true);
-    this.garageContent.cars.map(async (car) => {
-      await car.startCarEngine(car.car.id);
-      car.disableAllButtons();
-      return car;
-    });
+    const res: Promise<GarageItem>[] = this.garageContent.cars.map(
+      async (car) => {
+        await car.startCarEngine(car.car.id);
+        car.disableAllButtons();
+        return car;
+      },
+    );
+
+    const winnerCar = await Promise.race(res);
+
+    const winnerData: IWinnerData = {
+      id: winnerCar.car.id,
+      name: winnerCar.car.name,
+      color: winnerCar.car.color,
+      speed: +(winnerCar.speed / 1000).toFixed(2),
+      wins: 1,
+    };
+
+    const popupWinner = new PopupWinner(this.garageContainer, winnerData);
+    this.garageSettings.settingsButtons.btnReset.removeDisabled();
+    setTimeout(() => popupWinner?.destroy(), 5000);
+
+    await this.setWinner(winnerData);
+  }
+
+  private async setWinner(winnerCar: IWinnerData): Promise<void> {
+    const winnerData = await getWinnerApi(winnerCar.id);
+
+    if (winnerData.status === 200) {
+      winnerData.result.wins++;
+      winnerCar.wins = winnerData.result.wins;
+
+      await this.updateWinner(winnerCar);
+    } else {
+      await this.createWinner(winnerCar);
+    }
   }
 
   private garageSettingsBtn(set: boolean) {
@@ -130,7 +168,7 @@ export class PageGarage {
     this.garageSettings.settingsButtons.btnGenerate.setDisabled(set);
   }
 
-  private buttonAddEvenListener() {
+  private btnGarageSettingsAddListener() {
     this.garageSettings.settingsButtons.btnRace.addeventlistener(
       'click',
       this.startRace.bind(this),
@@ -144,5 +182,25 @@ export class PageGarage {
       'click',
       this.generateRandomCars.bind(this),
     );
+  }
+
+  private async updateWinner(winnerData: IWinnerData): Promise<void> {
+    const carObj: IWinner = {
+      id: winnerData.id,
+      wins: winnerData.wins,
+      time: winnerData.speed,
+    };
+
+    await setWinnerApi(carObj, 'PUT');
+  }
+
+  private async createWinner(winnerData: IWinnerData): Promise<void> {
+    const carObj = {
+      id: winnerData.id,
+      wins: 1,
+      time: winnerData.speed,
+    };
+
+    await setWinnerApi(carObj, 'POST');
   }
 }

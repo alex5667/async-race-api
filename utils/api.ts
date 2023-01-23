@@ -1,4 +1,4 @@
-import { ICar, IEngine, ICreateCar, IUpdateCar } from '../interfaces';
+import { ICar, IEngine, ICreateCar, IUpdateCar, IWinner } from '../interfaces';
 
 const BASE_URL = 'http://localhost:3000';
 
@@ -42,7 +42,7 @@ export const startEngineApi = async (
   }
 };
 
-export const switchToDriveModeApi = async (carId: number): Promise<number> => {
+export const switchToDriveApi = async (carId: number): Promise<number> => {
   const response = await fetch(`${BASE_URL}/engine?id=${carId}&status=drive`);
   return response.status;
 };
@@ -92,9 +92,12 @@ export const updateCarApi = async (car: IUpdateCar): Promise<void> => {
   }
 };
 
-export const deleteCarApi = async (carId: number): Promise<void> => {
+export const deleteCarApi = async (
+  carId: number,
+  point: string,
+): Promise<void> => {
   try {
-    await fetch(`${BASE_URL}/garage/${carId}`, {
+    await fetch(`${BASE_URL}/${point}/${carId}`, {
       method: 'DELETE',
     });
   } catch (err) {
@@ -102,26 +105,50 @@ export const deleteCarApi = async (carId: number): Promise<void> => {
   }
 };
 
-export const deleteWinnerApi = async (carId: number): Promise<void> => {
-  try {
-    await fetch(`${BASE_URL}/winners/${carId}`, {
-      method: 'DELETE',
-    });
-  } catch (err) {
-    throw new Error(String(err));
-  }
-};
 
-export const getCar = async (carId: number): Promise<ICar | null> => {
+export const getCarApi = async (carId: number): Promise<ICar | null> => {
   try {
-    const data = await fetch(`${BASE_URL}/garage/${carId}`);
-    const res: ICar = await data.json();
+    const response = await fetch(`${BASE_URL}/garage/${carId}`);
+    const data: ICar = await response.json();
 
-    if (data.status === 200) {
-      return res;
+    if (response.status === 200) {
+      return data;
     }
 
     return null;
+  } catch (err) {
+    throw new Error(String(err));
+  }
+};
+
+export const getWinnerApi = async (
+  winnerId: number,
+): Promise<{ status: number; result: IWinner }> => {
+  try {
+    const response = await fetch(`${BASE_URL}/winners/${winnerId}`);
+    const data: IWinner = await response.json();
+
+    return {
+      status: response.status,
+      result: data,
+    };
+  } catch (err) {
+    throw new Error(String(err));
+  }
+};
+
+export const setWinnerApi = async (
+  carData: IWinner,
+  methods: string,
+): Promise<void> => {
+  try {
+    await fetch(`${BASE_URL}/winners/${carData.id}`, {
+      method: methods,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(carData),
+    });
   } catch (err) {
     throw new Error(String(err));
   }

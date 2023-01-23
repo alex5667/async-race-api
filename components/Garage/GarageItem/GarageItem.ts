@@ -4,22 +4,22 @@ import { Button } from '../../Button/Button';
 import { CarImage } from '../../CarImage/CarImage';
 import {
   startEngineApi,
-  switchToDriveModeApi,
+  switchToDriveApi,
   stopEngineApi,
 } from '../../../utils/api';
 
 import './GarageItem.scss';
 
-const carImageWidth = 100;
 
 export class GarageItem {
   public car: ICar;
   private itemContainer: HTMLDivElement;
-  private startEngineButton: Button;
-  private stopEngineButton: Button;
+  private startEngine: Button;
+  private stopEngine: Button;
   private imageCar: HTMLDivElement;
   private carAnimation: Animation | undefined;
   public speed = 0;
+  private carImageWidth = 100;
 
   removeCar: (carId: number) => void = () => {};
   updateCar: (carId: number) => void = () => {};
@@ -54,20 +54,13 @@ export class GarageItem {
       'bottom__buttons',
     ]);
 
-    this.startEngineButton = new Button(bottomButtons, ['btn-bottom'], 'A');
-    this.startEngineButton.onClick = () => {
-      if (car.id) this.startCarEngine(car.id);
-    };
-
-    this.stopEngineButton = new Button(
-      bottomButtons,
-      ['btn-bottom'],
-      'B',
-      true,
+    this.startEngine = new Button(bottomButtons, ['btn-bottom'], 'A');
+    this.startEngine.addeventlistener('click', () =>
+      this.startCarEngine(car.id),
     );
-    this.stopEngineButton.onClick = () => {
-      if (car.id) this.stopCarEngine(car.id);
-    };
+
+    this.stopEngine = new Button(bottomButtons, ['btn-bottom'], 'B', true);
+    this.stopEngine.addeventlistener('click', () => this.stopCarEngine(car.id));
 
     this.imageCar = render<HTMLDivElement>(containerBottom, 'div', [
       'image-car',
@@ -89,18 +82,18 @@ export class GarageItem {
       const time = result.distance / result.velocity;
 
       this.animationCar(time);
-      await this.switchToDriveMode(result);
+      await this.switchToDrive(result);
     }
   }
 
   updateButtons(type = false): void {
-    this.startEngineButton.setDisabled(type);
-    this.stopEngineButton.setDisabled(!type);
+    this.startEngine.setDisabled(type);
+    this.stopEngine.setDisabled(!type);
   }
 
   private animationCar(time: number): void {
     this.carAnimation = this.imageCar.animate(
-      [{ left: '100px' }, { left: `calc(100% - ${carImageWidth}px)` }],
+      [{ left: '100px' }, { left: `calc(100% - ${this.carImageWidth}px)` }],
       {
         duration: time,
         easing: 'ease-in-out',
@@ -108,12 +101,12 @@ export class GarageItem {
     );
     this.carAnimation.play();
     this.carAnimation.onfinish = () => {
-      this.imageCar.style.left = `calc(100% - ${carImageWidth}px)`;
+      this.imageCar.style.left = `calc(100% - ${this.carImageWidth}px)`;
     };
   }
 
-  private async switchToDriveMode(car: IEngine): Promise<void> {
-    const driveMode = await switchToDriveModeApi(this.car.id);
+  private async switchToDrive(car: IEngine): Promise<void> {
+    const driveMode = await switchToDriveApi(this.car.id);
     return new Promise((resolve) => {
       if (driveMode === 500) {
         this.carAnimation?.pause();
@@ -132,12 +125,12 @@ export class GarageItem {
       this.updateButtons();
       this.speed = 0;
       this.carAnimation?.pause();
-      this.imageCar.style.left = `${carImageWidth}px`;
+      this.imageCar.style.left = `${this.carImageWidth}px`;
     }
   }
 
   disableAllButtons(): void {
-    this.startEngineButton.setDisabled(true);
-    this.stopEngineButton.setDisabled(false);
+    this.startEngine.setDisabled(true);
+    this.stopEngine.setDisabled(false);
   }
 }
