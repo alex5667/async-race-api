@@ -7,7 +7,7 @@ export class App {
   router: Router;
   mainSection: HTMLElement;
   constructor(private root: HTMLElement) {
-    const header = new Header(this.root);
+    const heder = new Header(this.root);
     this.mainSection = render<HTMLDivElement>(this.root, 'section', ['main']);
 
     this.router = new Router(this.mainSection);
